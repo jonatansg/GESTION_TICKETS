@@ -41,31 +41,36 @@ if (isset($_SESSION["usu_id"])) {
           <h5 class="m-t-lg with-border">Añadir Información</h5>
 
           <div class="row">
-            <div class="col-lg-6">
+            <form method="post" id="ticket_form">  
+
+              <input type="hidden" id="usu_id" name="usu_id" value="<?php echo $_SESSION["usu_id"] ?>">
+
+              <div class="col-lg-6">
               <fieldset class="form-group">
                 <label class="form-label semibold" for="exampleInput">Categoría</label>
-                <select id="cat_id" class="form-control">
+                <select id="cat_id" name="cat_id" class="form-control">
                   
                 </select>
               </fieldset>
-            </div>
-            <div class="col-lg-6">
+              </div>
+              <div class="col-lg-6">
               <fieldset class="form-group">
-                <label class="form-label semibold" for="exampleInputEmail1">Título</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Inserte Título">
+                <label class="form-label semibold" for="tick_titulo">Título</label>
+                <input type="text" class="form-control" id="tick_titulo" name="tick_titulo" placeholder="Inserte Título">
               </fieldset>
-            </div>
-            <div class="col-lg-12">
+              </div>
+              <div class="col-lg-12">
               <fieldset class="form-group">
-                <label class="form-label semibold" for="exampleInputPassword1">Descripción</label>
+                <label class="form-label semibold" for="tick_descrip">Descripción</label>
                 <div class="summernote-theme-1">
-                  <textarea id="tick_descrip" class="summernote" name="name"></textarea>
+                  <textarea id="tick_descrip" name="tick_descrip" class="summernote" name="name"></textarea>
                 </div>
               </fieldset>
-            </div>
-            <div class="col-lg-12">
-							<button type="submit" name="action" value="add" class="btn btn-rounded btn-inline btn-primary">Guardar</button>
-						</div>
+              </div>
+              <div class="col-lg-12">
+							  <button type="submit" name="action" value="add" class="btn btn-rounded btn-inline btn-primary">Guardar</button>
+					  	</div>
+            </form>  
           </div>
 
         </div>
