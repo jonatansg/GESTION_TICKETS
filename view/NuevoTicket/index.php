@@ -44,10 +44,8 @@ if (isset($_SESSION["usu_id"])) {
             <div class="col-lg-6">
               <fieldset class="form-group">
                 <label class="form-label semibold" for="exampleInput">Categoría</label>
-                <select id="exampleSelect" class="form-control">
-                  <option>Hardware</option>
-                  <option>Software</option>
-                  <option>Otros</option>
+                <select id="cat_id" class="form-control">
+                  
                 </select>
               </fieldset>
             </div>
@@ -61,7 +59,7 @@ if (isset($_SESSION["usu_id"])) {
               <fieldset class="form-group">
                 <label class="form-label semibold" for="exampleInputPassword1">Descripción</label>
                 <div class="summernote-theme-1">
-                  <textarea id="tick_descrip" class="summernote" name="name">Hello Summernote</textarea>
+                  <textarea id="tick_descrip" class="summernote" name="name"></textarea>
                 </div>
               </fieldset>
             </div>
