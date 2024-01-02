@@ -68,12 +68,12 @@ $(document).on("click","#btnenviar", function(){
 
 $(document).on("click","#btncerrarticket", function(){
     swal({
-        title: "HelpDesk",
+        title: "Advertencia",
         text: "¿Está seguro de cerrar el ticket?",
         type: "warning",
         showCancelButton: true,
         confirmButtonClass: "btn-warning",
-        confirmButtonText: "Si",
+        confirmButtonText: "Sí",
         cancelButtonText: "No",
         closeOnConfirm: false
     },
@@ -88,8 +88,8 @@ $(document).on("click","#btncerrarticket", function(){
             listardetalle(tick_id);
 
             swal({
-                title: "HelpDesk!",
-                text: "Ticket Cerrado correctamente.",
+                title: "¡Confirmación!",
+                text: "Ticket cerrado correctamente.",
                 type: "success",
                 confirmButtonClass: "btn-success"
             });
@@ -114,7 +114,6 @@ function listardetalle(tick_id){
         $('#tick_titulo').val(data.tick_titulo);
         $('#tickd_descripusu').summernote ('code',data.tick_descrip);
 
-        console.log( data.tick_estado_texto);
         if (data.tick_estado_texto == "Cerrado"){
             $('#pnldetalle').hide();
         }

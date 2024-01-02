@@ -9,6 +9,11 @@
             $ticket->insert_ticket($_POST["usu_id"],$_POST["cat_id"],$_POST["tick_titulo"],$_POST["tick_descrip"]);
         break;
 
+        case "update":
+            $ticket->update_ticket($_POST["tick_id"]);
+            $ticket->insert_ticketdetalle_cerrar($_POST["tick_id"],$_POST["usu_id"]);
+        break;
+
         case "listar_x_usu":
             $datos=$ticket->listar_ticket_x_usu($_POST["usu_id"]);
             $data= Array();
