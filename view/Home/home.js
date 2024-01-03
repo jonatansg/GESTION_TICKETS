@@ -21,6 +21,19 @@ $(document).ready(function(){
             $('#lbltotalcerrado').html(data.TOTAL);
         });
 
+        $.post("../../controller/usuario.php?op=grafico", {usu_id:usu_id},function (data) {
+            data = JSON.parse(data);
+    
+            new Morris.Bar({
+                element: 'divgrafico',
+                data: data,
+                xkey: 'nom',
+                ykeys: ['total'],
+                labels: ['Value'],
+                barColors: ["#1AB244"], 
+            });
+        }); 
+
     }else{
         $.post("../../controller/ticket.php?op=total",function (data) {
             data = JSON.parse(data);
@@ -37,9 +50,18 @@ $(document).ready(function(){
             $('#lbltotalcerrado').html(data.TOTAL);
         });  
 
+        $.post("../../controller/ticket.php?op=grafico",function (data) {
+            data = JSON.parse(data);
+    
+            new Morris.Bar({
+                element: 'divgrafico',
+                data: data,
+                xkey: 'nom',
+                ykeys: ['total'],
+                labels: ['Value']
+            });
+        }); 
     }
-
- 
 });
 
 init();
