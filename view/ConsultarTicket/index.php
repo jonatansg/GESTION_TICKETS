@@ -37,11 +37,13 @@ if (isset($_SESSION["usu_id"])) {
           <table id="ticket_data" class="table table-bordered table-striped table-vcenter js-dataTable-full">
             <thead>
               <tr>
-                <th style="width: 5%;">Número Ticket</th>
+                <th style="width: 5%;">Nº Ticket</th>
                 <th style="width: 15%;">Categoría</th>
                 <th class="d-none d-sm-table-cell" style="width: 40%;">Título</th>
                 <th class="d-none d-sm-table-cell" style="width: 5%;">Estado</th>
                 <th class="d-none d-sm-table-cell" style="width: 10%;">Fecha Creación</th>
+                <th class="d-none d-sm-table-cell" style="width: 10%;">Fecha Asignación</th>
+                <th class="d-none d-sm-table-cell" style="width: 10%;">Soporte</th>
                 <th class="text-center" style="width: 5%;"></th>
               </tr>
             </thead>
@@ -54,6 +56,7 @@ if (isset($_SESSION["usu_id"])) {
       </div>
     </div>
     <!-- Contenido -->
+    <?php require_once("modalasignar.php"); ?>
 
     <?php require_once("../MainJs/js.php"); ?>
 
