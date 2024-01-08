@@ -13,6 +13,23 @@ $(document).ready(function () {
       link: [],
       air: [],
     },
+    callbacks: {
+      onImageUpload: function (image) {
+        console.log("Image detect...");
+        myimagetreat(image[0]);
+      },
+      onPaste: function (e) {
+        console.log("Text detect...");
+      },
+    },
+    toolbar: [
+      ["style", ["bold", "italic", "underline", "clear"]],
+      ["font", ["strikethrough", "superscript", "subscript"]],
+      ["fontsize", ["fontsize"]],
+      ["color", ["color"]],
+      ["para", ["ul", "ol", "paragraph"]],
+      ["height", ["height"]],
+    ],
   });
 
   $.post("../../controller/categoria.php?op=combo", function (data, status) {
@@ -24,7 +41,9 @@ function guardaryeditar(e) {
   e.preventDefault();
   var formData = new FormData($("#ticket_form")[0]);
   if (
-    $("#tick_descrip").summernote("isEmpty") || $("#tick_titulo").val() == "") {
+    $("#tick_descrip").summernote("isEmpty") ||
+    $("#tick_titulo").val() == ""
+  ) {
     swal("¡Advertencia!", "Campos Vacíos", "warning");
   } else {
     $.ajax({

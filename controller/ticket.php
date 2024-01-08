@@ -23,7 +23,7 @@ switch ($_GET["op"]) {
 
   case "listar_x_usu":
     $datos = $ticket->listar_ticket_x_usu($_POST["usu_id"]);
-    $data = array();
+    $data = Array();
     foreach ($datos as $row) {
       $sub_array = array();
       $sub_array[] = $row["tick_id"];
@@ -68,7 +68,7 @@ switch ($_GET["op"]) {
 
   case "listar":
     $datos = $ticket->listar_ticket();
-    $data = array();
+    $data = Array();
     foreach ($datos as $row) {
       $sub_array = array();
       $sub_array[] = $row["tick_id"];
