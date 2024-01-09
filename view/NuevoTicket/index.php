@@ -7,6 +7,7 @@ if (isset($_SESSION["usu_id"])) {
   <?php require_once("../MainHead/head.php"); ?>
   <title>Gestión Tickets :: Nuevo Ticket</title>
   </head>
+
   <body class="with-side-menu">
 
     <?php require_once("../MainHeader/header.php"); ?>
@@ -41,36 +42,44 @@ if (isset($_SESSION["usu_id"])) {
           <h5 class="m-t-lg with-border">Añadir Información</h5>
 
           <div class="row">
-            <form method="post" id="ticket_form">  
+            <form method="post" id="ticket_form">
 
               <input type="hidden" id="usu_id" name="usu_id" value="<?php echo $_SESSION["usu_id"] ?>">
 
-              <div class="col-lg-6">
-              <fieldset class="form-group">
-                <label class="form-label semibold" for="exampleInput">Categoría</label>
-                <select id="cat_id" name="cat_id" class="form-control">
-                  
-                </select>
-              </fieldset>
+              <div class="col-lg-12">
+                <fieldset class="form-group">
+                  <label class="form-label semibold" for="tick_titulo">Título</label>
+                  <input type="text" class="form-control" id="tick_titulo" name="tick_titulo" placeholder="Introduzca Título">
+                </fieldset>
               </div>
+
               <div class="col-lg-6">
-              <fieldset class="form-group">
-                <label class="form-label semibold" for="tick_titulo">Título</label>
-                <input type="text" class="form-control" id="tick_titulo" name="tick_titulo" placeholder="Inserte Título">
-              </fieldset>
+                <fieldset class="form-group">
+                  <label class="form-label semibold" for="exampleInput">Categoría</label>
+                  <select id="cat_id" name="cat_id" class="form-control">
+                  </select>
+                </fieldset>
+              </div>
+
+              <div class="col-lg-6">
+                <fieldset class="form-group">
+                  <label class="form-label semibold" for="exampleInput">Documentos Adicionales</label>
+                  <input type="file" name="fileElem" id="fileElem" class="form-control" multiple>
+                </fieldset>
+              </div>
+
+              <div class="col-lg-12">
+                <fieldset class="form-group">
+                  <label class="form-label semibold" for="tick_descrip">Descripción</label>
+                  <div class="summernote-theme-1">
+                    <textarea id="tick_descrip" name="tick_descrip" class="summernote" name="name"></textarea>
+                  </div>
+                </fieldset>
               </div>
               <div class="col-lg-12">
-              <fieldset class="form-group">
-                <label class="form-label semibold" for="tick_descrip">Descripción</label>
-                <div class="summernote-theme-1">
-                  <textarea id="tick_descrip" name="tick_descrip" class="summernote" name="name"></textarea>
-                </div>
-              </fieldset>
+                <button type="submit" name="action" value="add" class="btn btn-rounded btn-inline btn-primary">Guardar</button>
               </div>
-              <div class="col-lg-12">
-							  <button type="submit" name="action" value="add" class="btn btn-rounded btn-inline btn-primary">Guardar</button>
-					  	</div>
-            </form>  
+            </form>
           </div>
 
         </div>
@@ -86,7 +95,7 @@ if (isset($_SESSION["usu_id"])) {
 
   </html>
 <?php
-  } else {
-    header("Location:".Conectar::ruta()."index.php");
-  }
+} else {
+  header("Location:" . Conectar::ruta() . "index.php");
+}
 ?>
