@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
     <?php require_once("../MainHead/head.php");?>
-	<title>Gestión Tickets :: Nuevo Ticket<</title>
+	<title>Gestión Tickets :: Nuevo Ticket</title>
 </head>
 <body class="with-side-menu">
 
