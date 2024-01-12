@@ -52,16 +52,25 @@
 							</fieldset>
 						</div>
 
-						<div class="col-lg-6">
+						<div class="col-lg-4">
 							<fieldset class="form-group">
 								<label class="form-label semibold" for="exampleInput">Categoría</label>
-								<select id="cat_id" name="cat_id" class="form-control">
+								<select id="cat_id" name="cat_id" class="form-control" data-placeholder="Seleccionar">
 
 								</select>
 							</fieldset>
 						</div>
 
-						<div class="col-lg-6">
+						<div class="col-lg-4">
+							<fieldset class="form-group">
+								<label class="form-label semibold" for="exampleInput">Subcategoría</label>
+								<select id="cats_id" name="cats_id" class="form-control" data-placeholder="Seleccionar">
+									<option label="Seleccionar"></option>
+								</select>
+							</fieldset>
+						</div>
+
+						<div class="col-lg-4">
 							<fieldset class="form-group">
 								<label class="form-label semibold" for="exampleInput">Documentos Adicionales</label>
 								<input type="file" name="fileElem" id="fileElem" class="form-control" multiple>
