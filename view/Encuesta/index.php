@@ -34,7 +34,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="nombreCompleto">Fecha de Cierre</label>
-                            <input type="text" class="form-control" id="lblnomidticket" name="lblnomidticket" readonly>
+                            <input type="text" class="form-control" id="lblfechcierre" name="lblfechcierre" readonly>
                         </div>
                     </div>
                 </section>
@@ -47,14 +47,20 @@
                     </div>
                 </section>
                 <section class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label for="tipoAtencion">Categoría</label>
                         <input type="text" class="form-control" id="cat_nom" name="cat_nom" readonly>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="fechaActual">Subcategoría</label>
                             <input type="text" class="form-control" id="cats_nom" name="cats_nom" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="fechaActual">Prioridad</label>
+                            <input type="text" class="form-control" id="prio_nom" name="prio_nom" readonly>
                         </div>
                     </div>
                 </section>
