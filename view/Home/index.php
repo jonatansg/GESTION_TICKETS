@@ -6,7 +6,7 @@ if (isset($_SESSION["usu_id"])) {
   <html>
   <?php require_once("../MainHead/head.php"); ?>
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
-  <title>Gestión Tickets :: Home</title>
+  <title>GestTicket :: Home</title>
   </head>
 
   <body class="with-side-menu">

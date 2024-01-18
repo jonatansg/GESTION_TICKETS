@@ -5,28 +5,27 @@
 <!DOCTYPE html>
 <html>
     <?php require_once("../MainHead/head.php");?>
-	<title>GestTicket :: Perfil</title>
+	<title>GesTicket :: Mant. Subcategoría</title>
 </head>
 <body class="with-side-menu">
 
     <?php require_once("../MainHeader/header.php");?>
 
     <div class="mobile-menu-left-overlay"></div>
-
+    
     <?php require_once("../MainNav/nav.php");?>
 
 	<!-- Contenido -->
 	<div class="page-content">
 		<div class="container-fluid">
-
 			<header class="section-header">
 				<div class="tbl">
 					<div class="tbl-row">
 						<div class="tbl-cell">
-							<h3>Perfil</h3>
+							<h3>Mantenimiento Subcategoría</h3>
 							<ol class="breadcrumb breadcrumb-simple">
 								<li><a href="#">Home</a></li>
-								<li class="active">Cambiar Contraseña</li>
+								<li class="active">Mantenimiento Subcategoría</li>
 							</ol>
 						</div>
 					</div>
@@ -34,35 +33,31 @@
 			</header>
 
 			<div class="box-typical box-typical-padding">
+				<button type="button" id="btnnuevo" class="btn btn-inline btn-primary">Nuevo Registro</button>
+				<table id="usuario_data" class="table table-bordered table-striped table-vcenter js-dataTable-full">
+					<thead>
+						<tr>
+							<th style="width: 10%;">Categoría</th>
+							<th style="width: 10%;">Nombre</th>
+							<th class="text-center" style="width: 5%;"></th>
+							<th class="text-center" style="width: 5%;"></th>
+						</tr>
+					</thead>
+					<tbody>
 
-				<div class="row">
-						<div class="col-lg-6">
-							<fieldset class="form-group">
-								<label class="form-label semibold" for="exampleInput">Nueva Contraseña</label>
-								<input type="password" class="form-control" id="txtpass" name="txtpass">
-							</fieldset>
-						</div>
-
-						<div class="col-lg-6">
-							<fieldset class="form-group">
-								<label class="form-label semibold" for="exampleInput">Confirmar Contraseña</label>
-								<input type="password" class="form-control" id="txtpassnew" name="txtpassnew">
-							</fieldset>
-						</div>
-
-						<div class="col-lg-12">
-							<button type="button" id="btnactualizar" class="btn btn-rounded btn-inline btn-primary">Actualizar</button>
-						</div>
-				</div>
-
+					</tbody>
+				</table>
 			</div>
+
 		</div>
 	</div>
 	<!-- Contenido -->
 
+	<?php require_once("modalmantenimiento.php");?>
+
 	<?php require_once("../MainJs/js.php");?>
 	
-	<script type="text/javascript" src="mntperfil.js"></script>
+	<script type="text/javascript" src="mntsubcategoria.js"></script>
 
 </body>
 </html>

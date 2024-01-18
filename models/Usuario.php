@@ -34,6 +34,7 @@
             }
         }
 
+        /* TODO:Insert */
         public function insert_usuario($usu_nom,$usu_ape,$usu_correo,$usu_pass,$rol_id){
             $conectar= parent::conexion();
             parent::set_names();
@@ -48,6 +49,7 @@
             return $resultado=$sql->fetchAll();
         }
 
+        /* TODO:Update */
         public function update_usuario($usu_id,$usu_nom,$usu_ape,$usu_correo,$usu_pass,$rol_id){
             $conectar= parent::conexion();
             parent::set_names();
@@ -70,6 +72,7 @@
             return $resultado=$sql->fetchAll();
         }
 
+        /* TODO:Delete */
         public function delete_usuario($usu_id){
             $conectar= parent::conexion();
             parent::set_names();
@@ -80,6 +83,7 @@
             return $resultado=$sql->fetchAll();
         }
 
+        /* TODO:Todos los registros */
         public function get_usuario(){
             $conectar= parent::conexion();
             parent::set_names();
@@ -98,6 +102,7 @@
             return $resultado=$sql->fetchAll();
         }
 
+        /* TODO:Registro x id */
         public function get_usuario_x_id($usu_id){
             $conectar= parent::conexion();
             parent::set_names();

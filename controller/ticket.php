@@ -367,6 +367,17 @@
             echo json_encode($datos);
             break;
 
+        case "total";
+            $datos=$ticket->get_ticket_total();  
+            if(is_array($datos)==true and count($datos)>0){
+                foreach($datos as $row)
+                {
+                    $output["TOTAL"] = $row["TOTAL"];
+                }
+                echo json_encode($output);
+            }
+        break;
+
         case "totalabierto";
             $datos=$ticket->get_ticket_totalabierto();  
             if(is_array($datos)==true and count($datos)>0){

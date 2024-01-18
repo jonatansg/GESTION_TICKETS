@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Encuesta Gestión Tickets</title>
+	<title>Encuesta GestTicket</title>
 	<link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.2/css/star-rating.min.css" />
     <link rel="stylesheet" href="../../public/css/lib/bootstrap-sweetalert/sweetalert.css">
