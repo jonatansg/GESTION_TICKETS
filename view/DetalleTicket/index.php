@@ -139,6 +139,8 @@ if (isset($_SESSION["usu_id"])) {
 
     <script type="text/javascript" src="detalleticket.js"></script>
 
+    <script type="text/javascript" src="../notificacion.js"></script>
+
   </body>
 
   </html>

@@ -62,6 +62,8 @@ if (isset($_SESSION["usu_id"])) {
 
     <script type="text/javascript" src="mntusuario.js"></script>
 
+    <script type="text/javascript" src="../notificacion.js"></script>
+
 </body>
  </html>
 <?php
