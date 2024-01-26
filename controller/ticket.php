@@ -1,5 +1,7 @@
 <?php
+    /* TODO:Cadena de Conexion */
     require_once("../config/conexion.php");
+    /* TODO:Clases Necesarias */
     require_once("../models/Ticket.php");
     $ticket = new Ticket();
 
@@ -9,31 +11,45 @@
     require_once("../models/Documento.php");
     $documento = new Documento();
 
+    $key="mi_key_secret";
+    $cipher="aes-256-cbc";
+    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($cipher));
+
+    /*TODO: opciones del controlador Ticket*/
     switch($_GET["op"]){
 
+        /* TODO: Insertar nuevo Ticket */
         case "insert":
             $datos=$ticket->insert_ticket($_POST["usu_id"],$_POST["cat_id"],$_POST["cats_id"],$_POST["tick_titulo"],$_POST["tick_descrip"],$_POST["prio_id"]);
+            /* TODO: Obtener el ID del último registro insertado */
             if (is_array($datos)==true and count($datos)>0){
                 foreach ($datos as $row){
                     $output["tick_id"] = $row["tick_id"];
 
+                    /* TODO: Validamos si vienen archivos desde la vista */
                     if (empty($_FILES['files']['name'])){
 
                     }else{
+                        /* TODO: Contar cantidad de archivos desde la vista */
                         $countfiles = count($_FILES['files']['name']);
+                        /* TODO: Generamos ruta según el ID del último registro insertado */
                         $ruta = "../public/document/".$output["tick_id"]."/";
                         $files_arr = array();
 
+                        /* TODO: Preguntamos si la ruta existe, en caso no exista la creamos */
                         if (!file_exists($ruta)) {
                             mkdir($ruta, 0777, true);
                         }
 
+                        /* TODO: Recorremos los archivos e insertamos tantos detalles como documentos vinieron desde la vista */
                         for ($index = 0; $index < $countfiles; $index++) {
                             $doc1 = $_FILES['files']['tmp_name'][$index];
                             $destino = $ruta.$_FILES['files']['name'][$index];
 
+                            /* TODO: Insertamos Documentos */
                             $documento->insert_documento( $output["tick_id"],$_FILES['files']['name'][$index]);
 
+                            /* TODO: Movemos los archivos hacia la carpeta creada */
                             move_uploaded_file($doc1,$destino);
                         }
                     }
@@ -42,20 +58,24 @@
             echo json_encode($datos);
         break;
 
+        /* TODO: Actualizamos el ticket a cerrado y añadimos una línea adicional */
         case "update":
             $ticket->update_ticket($_POST["tick_id"]);
             $ticket->insert_ticketdetalle_cerrar($_POST["tick_id"],$_POST["usu_id"]);
         break;
 
+        /* TODO: Reabrimos el ticket a cerrado y añadimos una línea adicional */
         case "reabrir":
             $ticket->reabrir_ticket($_POST["tick_id"]);
             $ticket->insert_ticketdetalle_reabrir($_POST["tick_id"],$_POST["usu_id"]);
         break;
 
+        /* TODO: Asignamos el ticket  */    
         case "asignar":
             $ticket->update_ticket_asignacion($_POST["tick_id"],$_POST["usu_asig"]);
         break;
 
+        /* TODO: Listado de tickets según usuario, formato json para Datatable JS */
         case "listar_x_usu":
             $datos=$ticket->listar_ticket_x_usu($_POST["usu_id"]);
             $data= Array();
@@ -96,7 +116,10 @@
                     }
                 }
 
-                $sub_array[] = '<button type="button" onClick="ver('.$row["tick_id"].');"  id="'.$row["tick_id"].'" class="btn btn-inline btn-primary btn-sm ladda-button"><i class="fa fa-eye"></i></button>';
+                $cifrado = openssl_encrypt($row["tick_id"], $cipher, $key, OPENSSL_RAW_DATA, $iv);
+                $textoCifrado = base64_encode($iv . $cifrado);
+
+                $sub_array[] = '<button type="button" data-ciphertext="'.$textoCifrado.'" id="'.$textoCifrado.'" class="btn btn-inline btn-primary btn-sm ladda-button"><i class="fa fa-eye"></i></button>';
                 $data[] = $sub_array;
             }
 
@@ -108,6 +131,7 @@
             echo json_encode($results);
         break;
 
+        /* TODO: Listado de tickets, formato json para Datatable JS */
         case "listar":
             $datos=$ticket->listar_ticket();
             $data= Array();
@@ -160,10 +184,12 @@
             echo json_encode($results);
         break;
 
+        /* TODO: Listado de tickets, formato json para Datatable JS, filtro avanzado */
         case "listar_filtro":
             $datos=$ticket->filtrar_ticket($_POST["tick_titulo"],$_POST["cat_id"],$_POST["prio_id"]);
             $data= Array();
             foreach($datos as $row){
+
                 $sub_array = array();
                 $sub_array[] = $row["tick_id"];
                 $sub_array[] = $row["cat_nom"];
@@ -200,7 +226,10 @@
                     }
                 }
 
-                $sub_array[] = '<button type="button" onClick="ver('.$row["tick_id"].');"  id="'.$row["tick_id"].'" class="btn btn-inline btn-primary btn-sm ladda-button"><i class="fa fa-eye"></i></button>';
+                $cifrado = openssl_encrypt($row["tick_id"], $cipher, $key, OPENSSL_RAW_DATA, $iv);
+                $textoCifrado = base64_encode($iv . $cifrado);
+
+                $sub_array[] = '<button type="button" data-ciphertext="'.$textoCifrado.'" id="'.$textoCifrado.'" class="btn btn-inline btn-primary btn-sm ladda-button"><i class="fa fa-eye"></i></button>';
                 $data[] = $sub_array;
             }
 
@@ -212,14 +241,23 @@
             echo json_encode($results);
         break;
 
+        /* TODO: Formato HTML para mostrar detalle de ticket con comentarios */
         case "listardetalle":
-            $datos=$ticket->listar_ticketdetalle_x_ticket($_POST["tick_id"]);
+
+            $iv_dec = substr(base64_decode($_POST["tick_id"]), 0, openssl_cipher_iv_length($cipher));
+            $cifradoSinIV = substr(base64_decode($_POST["tick_id"]), openssl_cipher_iv_length($cipher));
+            $descifrado = openssl_decrypt($cifradoSinIV, $cipher, $key, OPENSSL_RAW_DATA, $iv_dec);
+
+            /* TODO: Listar todo el detalle según tick_id */
+            $datos=$ticket->listar_ticketdetalle_x_ticket($descifrado);
             ?>
                 <?php
+                    /* TODO: Repetir tantas veces se obtenga de la variable $datos */
                     foreach($datos as $row){
                         ?>
                             <article class="activity-line-item box-typical">
                                 <div class="activity-line-date">
+                                    <!-- TODO: Formato de fecha creación -->
                                     <?php echo date("d/m/Y", strtotime($row["fech_crea"]));?>
                                 </div>
                                 <header class="activity-line-item-header">
@@ -231,6 +269,7 @@
                                         </div>
                                         <div class="activity-line-item-user-name"><?php echo $row['usu_nom'].' '.$row['usu_ape'];?></div>
                                         <div class="activity-line-item-user-status">
+                                            <!-- TODO: Mostrar perfil del usuario segun rol -->
                                             <?php
                                                 if ($row['rol_id']==1){
                                                     echo 'Usuario';
@@ -252,6 +291,7 @@
 
                                                 <br>
 
+                                                <!-- TODO: Mostrar documentos adjunto en el detalle de ticket -->
                                                 <?php
                                                     $datos_det=$documento->get_documento_detalle_x_ticketd($row["tickd_id"]);
                                                     if(is_array($datos_det)==true and count($datos_det)>0){
@@ -267,6 +307,7 @@
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
+                                                                        <!-- TODO: Mostrar tantos documentos tenga el ticket detalle -->
                                                                         <?php
                                                                             foreach ($datos_det as $row_det){ 
                                                                         ?>
@@ -297,8 +338,13 @@
             <?php
             break;
 
+        /* TODO: Mostrar información de ticket en formato JSON para la vista */
         case "mostrar";
-            $datos=$ticket->listar_ticket_x_id($_POST["tick_id"]);  
+            $iv_dec = substr(base64_decode($_POST["tick_id"]), 0, openssl_cipher_iv_length($cipher));
+            $cifradoSinIV = substr(base64_decode($_POST["tick_id"]), openssl_cipher_iv_length($cipher));
+            $descifrado = openssl_decrypt($cifradoSinIV, $cipher, $key, OPENSSL_RAW_DATA, $iv_dec);
+
+            $datos=$ticket->listar_ticket_x_id($descifrado);  
             if(is_array($datos)==true and count($datos)>0){
                 foreach($datos as $row)
                 {
@@ -330,6 +376,40 @@
                 echo json_encode($output);
             }   
         break;
+
+        case "mostrar_noencry";
+            $datos=$ticket->listar_ticket_x_id($_POST["tick_id"]);
+            if(is_array($datos)==true and count($datos)>0){
+                foreach($datos as $row)
+                {
+                    $output["tick_id"] = $row["tick_id"];
+                    $output["usu_id"] = $row["usu_id"];
+                    $output["cat_id"] = $row["cat_id"];
+
+                    $output["tick_titulo"] = $row["tick_titulo"];
+                    $output["tick_descrip"] = $row["tick_descrip"];
+
+                    if ($row["tick_estado"]=="Abierto"){
+                        $output["tick_estado"] = '<span class="label label-pill label-success">Abierto</span>';
+                    }else{
+                        $output["tick_estado"] = '<span class="label label-pill label-danger">Cerrado</span>';
+                    }
+
+                    $output["tick_estado_texto"] = $row["tick_estado"];
+
+                    $output["fech_crea"] = date("d/m/Y H:i:s", strtotime($row["fech_crea"]));
+                    $output["fech_cierre"] = date("d/m/Y H:i:s", strtotime($row["fech_cierre"]));
+                    $output["usu_nom"] = $row["usu_nom"];
+                    $output["usu_ape"] = $row["usu_ape"];
+                    $output["cat_nom"] = $row["cat_nom"];
+                    $output["cats_nom"] = $row["cats_nom"];
+                    $output["tick_estre"] = $row["tick_estre"];
+                    $output["tick_coment"] = $row["tick_coment"];
+                    $output["prio_nom"] = $row["prio_nom"];
+                }
+                echo json_encode($output);
+            }
+            break;
 
         case "insertdetalle":
             $datos=$ticket->insert_ticketdetalle($_POST["tick_id"],$_POST["usu_id"],$_POST["tickd_descrip"]);
@@ -367,6 +447,7 @@
             echo json_encode($datos);
             break;
 
+        /* TODO: Total de ticket para vista de soporte */
         case "total";
             $datos=$ticket->get_ticket_total();  
             if(is_array($datos)==true and count($datos)>0){
@@ -378,6 +459,7 @@
             }
         break;
 
+        /* TODO: Total de ticket Abierto para vista de soporte */
         case "totalabierto";
             $datos=$ticket->get_ticket_totalabierto();  
             if(is_array($datos)==true and count($datos)>0){
@@ -389,6 +471,7 @@
             }
         break;
 
+        /* TODO: Total de ticket Cerrados para vista de soporte */
         case "totalcerrado";
             $datos=$ticket->get_ticket_totalcerrado();  
             if(is_array($datos)==true and count($datos)>0){
@@ -400,6 +483,7 @@
             }
         break;
 
+        /* TODO: Formato Json para gráfico de soporte */
         case "grafico";
             $datos=$ticket->get_ticket_grafico();  
             echo json_encode($datos);

@@ -10,14 +10,17 @@ function init(){
 
 $(document).ready(function(){
 
+    /* TODO: Llenar Combo Categoría */
     $.post("../../controller/categoria.php?op=combo",function(data, status){
         $('#cat_id').html(data);
     });
 
+    /* TODO: Llenar Combo Prioridad */
     $.post("../../controller/prioridad.php?op=combo",function(data, status){
         $('#prio_id').html(data);
     });
 
+    /* TODO: Llenar Combo usuario asignar */
     $.post("../../controller/usuario.php?op=combo", function (data) {
         $('#usu_asig').html(data);
     });
@@ -80,6 +83,7 @@ $(document).ready(function(){
             }     
         }).DataTable(); 
     }else{
+        /* TODO: Filtro avanzado en caso de ser soporte */
         var tick_titulo = $('tick_titulo').val();
         var cat_id = $('cat_id').val();
         var prio_id = $('prio_id').val();
@@ -88,21 +92,24 @@ $(document).ready(function(){
     }
 });
 
-function ver(tick_id){
-    window.open('http://localhost/Gestion_Tickets/view/DetalleTicket/?ID='+ tick_id +'');
-}
+/* TODO: Link para poder ver el detalle de ticket en otra ventana */
+$(document).on("click",".btn-inline",function(){
+    const ciphertext = $(this).data("ciphertext");
+    window.open('http://localhost/Gestion_Tickets/view/DetalleTicket/?ID='+ ciphertext +'');
+});
 
+/* TODO: Mostrar datos antes de asignar */
 function asignar(tick_id){
-    $.post("../../controller/ticket.php?op=mostrar", {tick_id : tick_id}, function (data) {
+    $.post("../../controller/ticket.php?op=mostrar_noencry", {tick_id : tick_id}, function (data) {
         data = JSON.parse(data);
         $('#tick_id').val(data.tick_id);
 
         $('#mdltitulo').html('Asignar Usuario de Soporte');
         $("#modalasignar").modal('show');
     });
- 
 }
 
+/* TODO: Guardar asignación de usuario de soporte */
 function guardar(e){
     e.preventDefault();
 	var formData = new FormData($("#ticket_form")[0]);
@@ -114,18 +121,25 @@ function guardar(e){
         processData: false,
         success: function(datos){
             var tick_id = $('#tick_id').val();
+
+            /* TODO: Recargar Datatable JS */
+            $('#ticket_data').DataTable().ajax.reload();
+            
+            /* TODO: Enviar email de alerta de asignación */
             $.post("../../controller/email.php?op=ticket_asignado", {tick_id : tick_id}, function (data) {
 
             });
 
+            /* TODO: Alerta de confirmación */
             swal("¡Correcto!", "Asignado Correctamente", "success");
 
+            /* TODO: Ocultar modal */
             $("#modalasignar").modal('hide');
-            $('#ticket_data').DataTable().ajax.reload();
         }
     });
 }
 
+/* TODO: Reabrir ticket */
 function CambiarEstado(tick_id){
     swal({
         title: "¡Advertencia!",
@@ -139,12 +153,15 @@ function CambiarEstado(tick_id){
     },
     function(isConfirm) {
         if (isConfirm) {
+            /* TODO: Enviar actualización de estado */
             $.post("../../controller/ticket.php?op=reabrir", {tick_id : tick_id,usu_id : usu_id}, function (data) {
 
             });
 
+            /* TODO: Recargar Datatable JS */
             $('#ticket_data').DataTable().ajax.reload();	
 
+            /* TODO: Alerta de confirmación */
             swal({
                 title: "¡Confirmación!",
                 text: "Ticket Abierto.",
@@ -155,6 +172,7 @@ function CambiarEstado(tick_id){
     });
 }
 
+/* TODO: Filtro avanzado */
 $(document).on("click","#btnfiltrar", function(){
     limpiar();
 
@@ -165,6 +183,7 @@ $(document).on("click","#btnfiltrar", function(){
     listardatatable(tick_titulo,cat_id,prio_id);
 });
 
+/* TODO: Restaurar Datatable js y limpiar */
 $(document).on("click","#btntodo", function(){
     limpiar();
 
@@ -175,6 +194,7 @@ $(document).on("click","#btntodo", function(){
     listardatatable('','','');
 });
 
+/* TODO: Listar datatable con filtro avanzado */
 function listardatatable(tick_titulo,cat_id,prio_id){
     tabla=$('#ticket_data').dataTable({
         "aProcessing": true,
@@ -230,6 +250,7 @@ function listardatatable(tick_titulo,cat_id,prio_id){
     }).DataTable().ajax.reload();
 }
 
+/* TODO: Limpiamos restructurando el html del datatable js */
 function limpiar(){
     $('#table').html(
         "<table id='ticket_data' class='table table-bordered table-striped table-vcenter js-dataTable-full'>"+

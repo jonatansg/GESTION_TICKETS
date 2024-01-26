@@ -58,6 +58,7 @@ $(document).ready(function(){
 });
 
 /* TODO: Función para abrir detalle de ticket en una nueva ventana */
-function ver(tick_id){
-    window.open('http://localhost/Gestion_Tickets/view/DetalleTicket/?ID='+ tick_id +'');
-}
+$(document).on("click",".btn-inline",function(){
+    const ciphertext = $(this).data("ciphertext");
+    window.open('http://localhost/Gestion_Tickets/view/DetalleTicket/?ID='+ ciphertext +'');
+});

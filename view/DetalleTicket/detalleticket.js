@@ -3,10 +3,42 @@ function init(){
 }
 
 $(document).ready(function(){
-    var tick_id = getUrlParameter('ID');
 
-    listardetalle(tick_id);
+    const url=window.location.href;
+    const params = new URLSearchParams(new URL(url).search);
+    const tick_id = params.get("ID");
+    const decoded_id  = decodeURIComponent(tick_id);
+    const id = decoded_id.replace(/\s/g, '+');
 
+    /* TODO: Mostramos información de detalle de ticket */
+    $.post("../../controller/ticket.php?op=listardetalle", { tick_id : id }, function (data) {
+        $('#lbldetalle').html(data);
+    });
+
+    /* TODO: Mostramos información del ticket en inputs */
+    $.post("../../controller/ticket.php?op=mostrar", { tick_id : id }, function (data) {
+        console.log(data);
+        data = JSON.parse(data);
+        $('#lblestado').html(data.tick_estado);
+        $('#lblnomusuario').html(data.usu_nom +' '+data.usu_ape);
+        $('#lblfechcrea').html(data.fech_crea);
+
+        $('#lblnomidticket').html("Detalle Ticket - "+data.tick_id);
+
+        $('#cat_nom').val(data.cat_nom);
+        $('#cats_nom').val(data.cats_nom);
+        $('#tick_titulo').val(data.tick_titulo);
+        $('#tickd_descripusu').summernote ('code',data.tick_descrip);
+
+        $('#prio_nom').val(data.prio_nom);
+
+        if (data.tick_estado_texto == "Cerrado"){
+            /* TODO: Ocultamos panel de detalle */
+            $('#pnldetalle').hide();
+        }
+    });
+
+    /* TODO: Inicializamos summernotejs */
     $('#tickd_descrip').summernote({
         height: 400,
         lang: "es-ES",
@@ -29,6 +61,7 @@ $(document).ready(function(){
         ]
     });
 
+    /* TODO: Inicializamos summernotejs */
     $('#tickd_descripusu').summernote({
         height: 400,
         lang: "es-ES",
@@ -44,6 +77,7 @@ $(document).ready(function(){
 
     $('#tickd_descripusu').summernote('disable');
 
+    /* TODO: Listamos documentos en caso hubieran */
     tabla=$('#documentos_data').dataTable({
         "aProcessing": true,
         "aServerSide": true,
@@ -99,26 +133,12 @@ $(document).ready(function(){
 
 });
 
-var getUrlParameter = function getUrlParameter(sParam) {
-    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-        sURLVariables = sPageURL.split('&'),
-        sParameterName,
-        i;
-
-    for (i = 0; i < sURLVariables.length; i++) {
-        sParameterName = sURLVariables[i].split('=');
-
-        if (sParameterName[0] === sParam) {
-            return sParameterName[1] === undefined ? true : sParameterName[1];
-        }
-    }
-};
-
 $(document).on("click","#btnenviar", function(){
     var tick_id = getUrlParameter('ID');
     var usu_id = $('#user_idx').val();
     var tickd_descrip = $('#tickd_descrip').val();
 
+    /* TODO: Validamos si el summernote esta vacío antes de guardar */
     if ($('#tickd_descrip').summernote('isEmpty')){
         swal("¡Advertencia!", "Falta Descripción", "warning");
     }else{
@@ -127,10 +147,12 @@ $(document).on("click","#btnenviar", function(){
         formData.append('usu_id',usu_id);
         formData.append('tickd_descrip',tickd_descrip);
         var totalfiles = $('#fileElem').val().length;
+        /* TODO: Agregamos los documentos adjuntos en caso que hubiera */
         for (var i = 0; i < totalfiles; i++) {
             formData.append("files[]", $('#fileElem')[0].files[i]);
         }
 
+        /* TODO: Insertar detalle */
         $.ajax({
             url: "../../controller/ticket.php?op=insertdetalle",
             type: "POST",
@@ -150,6 +172,7 @@ $(document).on("click","#btnenviar", function(){
 });
 
 $(document).on("click","#btncerrarticket", function(){
+    /* TODO: Preguntamos antes de cerrar el ticket */
     swal({
         title: "¡Advertencia!",
         text: "¿Está seguro de cerrar el Ticket?",
@@ -164,17 +187,20 @@ $(document).on("click","#btncerrarticket", function(){
         if (isConfirm) {
             var tick_id = getUrlParameter('ID');
             var usu_id = $('#user_idx').val();
+            /* TODO: Actualizamos el ticket  */
             $.post("../../controller/ticket.php?op=update", { tick_id : tick_id,usu_id : usu_id }, function (data) {
 
             });
 
+            /* TODO: Alerta de ticket cerrado vía email */
             $.post("../../controller/email.php?op=ticket_cerrado", {tick_id : tick_id}, function (data) {
 
             });
 
-
+            /* TODO: Llamamos a función listardetalle */
             listardetalle(tick_id);
 
+            /* TODO: Alerta de confirmación */
             swal({
                 title: "¡Confirmado!",
                 text: "Ticket Cerrado correctamente.",
@@ -184,31 +210,5 @@ $(document).on("click","#btncerrarticket", function(){
         }
     });
 });
-
-function listardetalle(tick_id){
-    $.post("../../controller/ticket.php?op=listardetalle", { tick_id : tick_id }, function (data) {
-        $('#lbldetalle').html(data);
-    }); 
-
-    $.post("../../controller/ticket.php?op=mostrar", { tick_id : tick_id }, function (data) {
-        data = JSON.parse(data);
-        $('#lblestado').html(data.tick_estado);
-        $('#lblnomusuario').html(data.usu_nom +' '+data.usu_ape);
-        $('#lblfechcrea').html(data.fech_crea);
-               
-        $('#lblnomidticket').html("Detalle Ticket - "+data.tick_id);
-
-        $('#cat_nom').val(data.cat_nom);
-        $('#cats_nom').val(data.cats_nom);
-        $('#tick_titulo').val(data.tick_titulo);
-        $('#tickd_descripusu').summernote ('code',data.tick_descrip);
-
-        $('#prio_nom').val(data.prio_nom);
-
-        if (data.tick_estado_texto == "Cerrado"){
-            $('#pnldetalle').hide();
-        }
-    }); 
-}
 
 init();
