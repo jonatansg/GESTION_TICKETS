@@ -1,7 +1,9 @@
 <?php
 /* Librerías necesarias para que el proyecto pueda enviar emails */
-require('class.phpmailer.php');
-include("class.smtp.php");
+require '../include/vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 /* Llamada de las clases necesarias que se usarán en el envío del mail */
 require_once("../config/conexion.php");
@@ -25,24 +27,25 @@ class Email extends PHPMailer{
             $correo = $row["usu_correo"];
         }
 
-        //Igual//
+        //Igual
         $this->IsSMTP();
-        $this->Host = 'smtp.office365.com';//Aqui el server
-        $this->Port = 587;//Aqui el puerto
+        $this->Host = 'smtp.hostinger.com'; // Server
+        $this->Port = 587; // Puerto
         $this->SMTPAuth = true;
+        $this->SMTPSecure = 'tls';
+
         $this->Username = $this->gCorreo;
         $this->Password = $this->gContrasena;
-        $this->From = $this->gCorreo;
-        $this->SMTPSecure = 'tls';
-        $this->FromName = $this->tu_nombre = "Ticket Abierto ".$id;
+        $this->setFrom($this->gCorreo, "Ticket Abierto ".$id);
+
         $this->CharSet = 'UTF8';
         $this->addAddress($correo);
-        $this->WordWrap = 50;
+        $this->addAddress($_SESSION["usu_email"]);
         $this->IsHTML(true);
         $this->Subject = "Ticket Abierto";
-        //Igual//
+        //Igual
         $cuerpo = file_get_contents('../public/NuevoTicket.html'); /* Ruta del template en formato HTML */
-        /* parametros del template a remplazar */
+        /* Parámetros del template a remplazar */
         $cuerpo = str_replace("xnroticket", $id, $cuerpo);
         $cuerpo = str_replace("lblNomUsu", $usu, $cuerpo);
         $cuerpo = str_replace("lblTitu", $titulo, $cuerpo);
@@ -50,7 +53,13 @@ class Email extends PHPMailer{
 
         $this->Body = $cuerpo;
         $this->AltBody = strip_tags("Ticket Abierto");
-        return $this->Send();
+
+        try{
+            $this->Send();
+            return true;
+        }catch(Exception $e){
+            return false;
+        }
     }
 
     public function ticket_cerrado($tick_id){
@@ -64,16 +73,17 @@ class Email extends PHPMailer{
             $correo = $row["usu_correo"];
         }
 
-        //IGual//
+        //Igual//
         $this->IsSMTP();
-        $this->Host = 'smtp.office365.com';//Aqui el server
-        $this->Port = 587;//Aqui el puerto
+        $this->Host = 'smtp.hostinger.com';// Server
+        $this->Port = 587; // Puerto
         $this->SMTPAuth = true;
         $this->Username = $this->gCorreo;
         $this->Password = $this->gContrasena;
-        $this->From = $this->gCorreo;
         $this->SMTPSecure = 'tls';
-        $this->FromName = $this->tu_nombre = "Ticket Cerrado ".$id;
+
+        $this->setFrom($this->gCorreo, "Ticket Cerrado".$id);
+
         $this->CharSet = 'UTF8';
         $this->addAddress($correo);
         $this->WordWrap = 50;
@@ -81,7 +91,7 @@ class Email extends PHPMailer{
         $this->Subject = "Ticket Cerrado";
         //Igual//
         $cuerpo = file_get_contents('../public/CerradoTicket.html'); /* Ruta del template en formato HTML */
-        /* parametros del template a remplazar */
+        /* Parámetros del template a remplazar */
         $cuerpo = str_replace("xnroticket", $id, $cuerpo);
         $cuerpo = str_replace("lblNomUsu", $usu, $cuerpo);
         $cuerpo = str_replace("lblTitu", $titulo, $cuerpo);
@@ -89,7 +99,13 @@ class Email extends PHPMailer{
 
         $this->Body = $cuerpo;
         $this->AltBody = strip_tags("Ticket Cerrado");
-        return $this->Send();
+
+        try{
+            $this->Send();
+            return true;
+        }catch(Exception $e){
+            return false;
+        }
     }
 
     public function ticket_asignado($tick_id){
@@ -105,14 +121,15 @@ class Email extends PHPMailer{
 
         //IGual//
         $this->IsSMTP();
-        $this->Host = 'smtp.office365.com';//Aqui el server
-        $this->Port = 587;//Aqui el puerto
+        $this->Host = 'smtp.hostinger.com'; // Server
+        $this->Port = 587; // Puerto
         $this->SMTPAuth = true;
         $this->Username = $this->gCorreo;
         $this->Password = $this->gContrasena;
-        $this->From = $this->gCorreo;
         $this->SMTPSecure = 'tls';
-        $this->FromName = $this->tu_nombre = "Ticket Asignado ".$id;
+
+        $this->setFrom($this->gCorreo, "Ticket Asignado ".$id);
+
         $this->CharSet = 'UTF8';
         $this->addAddress($correo);
         $this->WordWrap = 50;
@@ -120,7 +137,7 @@ class Email extends PHPMailer{
         $this->Subject = "Ticket Asignado";
         //Igual//
         $cuerpo = file_get_contents('../public/AsignarTicket.html'); /* Ruta del template en formato HTML */
-        /* parametros del template a remplazar */
+        /* Parámetros del template a remplazar */
         $cuerpo = str_replace("xnroticket", $id, $cuerpo);
         $cuerpo = str_replace("lblNomUsu", $usu, $cuerpo);
         $cuerpo = str_replace("lblTitu", $titulo, $cuerpo);
@@ -128,9 +145,13 @@ class Email extends PHPMailer{
 
         $this->Body = $cuerpo;
         $this->AltBody = strip_tags("Ticket Asignado");
-        return $this->Send();
+
+        try{
+            $this->Send();
+            return true;
+        }catch(Exception $e){
+            return false;
+        }
     }
-
 }
-
 ?>
