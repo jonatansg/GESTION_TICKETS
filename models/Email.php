@@ -8,13 +8,14 @@ use PHPMailer\PHPMailer\Exception;
 /* Llamada de las clases necesarias que se usarán en el envío del mail */
 require_once("../config/conexion.php");
 require_once("../Models/Ticket.php");
+require_once("../Models/Usuario.php");
 
 class Email extends PHPMailer{
 
-    //Variable que contiene el correo del destinatario
+    // Variable que contiene el correo del destinatario
     protected $gCorreo = '********@hotmail.com';
     protected $gContrasena = '********';
-    //Variable que contiene la contraseña del destinatario
+    // Variable que contiene la contraseña del destinatario
 
     public function ticket_abierto($tick_id){
         $ticket = new Ticket();
@@ -27,7 +28,7 @@ class Email extends PHPMailer{
             $correo = $row["usu_correo"];
         }
 
-        //Igual
+        // Igual
         $this->IsSMTP();
         $this->Host = 'smtp.hostinger.com'; // Server
         $this->Port = 587; // Puerto
@@ -43,7 +44,7 @@ class Email extends PHPMailer{
         $this->addAddress($_SESSION["usu_email"]);
         $this->IsHTML(true);
         $this->Subject = "Ticket Abierto";
-        //Igual
+        // Igual
         $cuerpo = file_get_contents('../public/NuevoTicket.html'); /* Ruta del template en formato HTML */
         /* Parámetros del template a remplazar */
         $cuerpo = str_replace("xnroticket", $id, $cuerpo);
@@ -62,6 +63,7 @@ class Email extends PHPMailer{
         }
     }
 
+    /* TODO: Correo al Cerrar un ticket */
     public function ticket_cerrado($tick_id){
         $ticket = new Ticket();
         $datos = $ticket->listar_ticket_x_id($tick_id);
@@ -73,9 +75,9 @@ class Email extends PHPMailer{
             $correo = $row["usu_correo"];
         }
 
-        //Igual//
+        // Igual
         $this->IsSMTP();
-        $this->Host = 'smtp.hostinger.com';// Server
+        $this->Host = 'smtp.hostinger.com'; // Server
         $this->Port = 587; // Puerto
         $this->SMTPAuth = true;
         $this->Username = $this->gCorreo;
@@ -108,6 +110,7 @@ class Email extends PHPMailer{
         }
     }
 
+    /* TODO: Correo al Asignar un ticket */
     public function ticket_asignado($tick_id){
         $ticket = new Ticket();
         $datos = $ticket->listar_ticket_x_id($tick_id);
@@ -119,7 +122,7 @@ class Email extends PHPMailer{
             $correo = $row["usu_correo"];
         }
 
-        //IGual//
+        // Igual
         $this->IsSMTP();
         $this->Host = 'smtp.hostinger.com'; // Server
         $this->Port = 587; // Puerto
@@ -135,9 +138,9 @@ class Email extends PHPMailer{
         $this->WordWrap = 50;
         $this->IsHTML(true);
         $this->Subject = "Ticket Asignado";
-        //Igual//
+        // Igual
         $cuerpo = file_get_contents('../public/AsignarTicket.html'); /* Ruta del template en formato HTML */
-        /* Parámetros del template a remplazar */
+        /* Parámetros del template a reemplazar */
         $cuerpo = str_replace("xnroticket", $id, $cuerpo);
         $cuerpo = str_replace("lblNomUsu", $usu, $cuerpo);
         $cuerpo = str_replace("lblTitu", $titulo, $cuerpo);
@@ -148,6 +151,54 @@ class Email extends PHPMailer{
 
         try{
             $this->Send();
+            return true;
+        }catch(Exception $e){
+            return false;
+        }
+    }
+
+    public function recuperar_contrasena($usu_correo){
+        $usuario = new Usuario();
+
+        $usuario->get_cambiar_contra_recuperar($usu_correo);
+
+        $datos = $usuario->get_usuario_x_correo($usu_correo);
+        foreach ($datos as $row){
+            $usu_id = $row["usu_id"];
+            $usu_ape = $row["usu_ape"];
+            $usu_nom = $row["usu_nom"];
+            $correo = $row["usu_correo"];
+            $usu_pass= $row["usu_pass"];
+        }
+
+        //TODO: Igual
+        $this->IsSMTP();
+        $this->Host = 'smtp.hostinger.com'; // Server
+        $this->Port = 587; // Puerto
+        $this->SMTPAuth = true;
+        $this->SMTPSecure = 'tls';
+
+        $this->Username = $this->gCorreo;
+        $this->Password = $this->gContrasena;
+        $this->setFrom($this->gCorreo, "Recuperar Contraseña");
+
+        $this->CharSet = 'UTF8';
+        $this->addAddress($correo);
+        $this->IsHTML(true);
+        $this->Subject = "Recuperar Contraseña";
+        // Igual
+        $cuerpo = file_get_contents('../public/RecuperarContra.html'); /*TODO:  Ruta del template en formato HTML */
+        /*TODO: parametros del template a reemplazar */
+        $cuerpo = str_replace("xusunom", $usu_nom, $cuerpo);
+        $cuerpo = str_replace("xusuape", $usu_ape, $cuerpo);
+        $cuerpo = str_replace("xnuevopass", $usu_pass, $cuerpo);
+
+        $this->Body = $cuerpo;
+        $this->AltBody = strip_tags("Recuperar Contraseña");
+
+        try{
+            $this->Send();
+            $usuario->encriptar_nueva_contra($usu_id,$usu_pass);
             return true;
         }catch(Exception $e){
             return false;

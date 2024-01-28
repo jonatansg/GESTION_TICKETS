@@ -1,6 +1,7 @@
 <?php
     class Usuario extends Conectar{
 
+        /* TODO: Función de login y generación de sesión */
         public function login(){
             $conectar=parent::conexion();
             parent::set_names();
@@ -45,7 +46,7 @@
             }
         }
 
-        /* TODO:Insert */
+        /* TODO: Insert */
         public function insert_usuario($usu_nom,$usu_ape,$usu_correo,$usu_pass,$rol_id){
             $key="mi_key_secret";
             $cipher="aes-256-cbc";
@@ -66,7 +67,7 @@
             return $resultado=$sql->fetchAll();
         }
 
-        /* TODO:Update */
+        /* TODO: Update */
         public function update_usuario($usu_id,$usu_nom,$usu_ape,$usu_correo,$usu_pass,$rol_id){
             $key="mi_key_secret";
             $cipher="aes-256-cbc";
@@ -95,7 +96,7 @@
             return $resultado=$sql->fetchAll();
         }
 
-        /* TODO:Delete */
+        /* TODO: Delete */
         public function delete_usuario($usu_id){
             $conectar= parent::conexion();
             parent::set_names();
@@ -106,7 +107,7 @@
             return $resultado=$sql->fetchAll();
         }
 
-        /* TODO:Todos los registros */
+        /* TODO: Todos los registros */
         public function get_usuario(){
             $conectar= parent::conexion();
             parent::set_names();
@@ -116,6 +117,7 @@
             return $resultado=$sql->fetchAll();
         }
 
+        /* TODO: Obtener registros de usuarios según rol 2 */
         public function get_usuario_x_rol(){
             $conectar= parent::conexion();
             parent::set_names();
@@ -125,7 +127,7 @@
             return $resultado=$sql->fetchAll();
         }
 
-        /* TODO:Registro x id */
+        /* TODO: Registro x id */
         public function get_usuario_x_id($usu_id){
             $conectar= parent::conexion();
             parent::set_names();
@@ -136,6 +138,7 @@
             return $resultado=$sql->fetchAll();
         }
 
+        /* TODO: Total de registros según usu_id */
         public function get_usuario_total_x_id($usu_id){
             $conectar= parent::conexion();
             parent::set_names();
@@ -146,6 +149,7 @@
             return $resultado=$sql->fetchAll();
         }
 
+        /* TODO: Total de Tickets Abiertos por usu_id */
         public function get_usuario_totalabierto_x_id($usu_id){
             $conectar= parent::conexion();
             parent::set_names();
@@ -156,6 +160,7 @@
             return $resultado=$sql->fetchAll();
         }
 
+        /* TODO: Total de Tickets Cerrados por usu_id */
         public function get_usuario_totalcerrado_x_id($usu_id){
             $conectar= parent::conexion();
             parent::set_names();
@@ -166,6 +171,7 @@
             return $resultado=$sql->fetchAll();
         }
 
+        /* TODO: Total de Tickets por categoría según usuario */
         public function get_usuario_grafico($usu_id){
             $conectar= parent::conexion();
             parent::set_names();
@@ -184,6 +190,7 @@
             return $resultado=$sql->fetchAll();
         } 
 
+        /* TODO: Actualizar contraseña del usuario */
         public function update_usuario_pass($usu_id,$usu_pass){
             $conectar= parent::conexion();
             parent::set_names();
@@ -194,6 +201,53 @@
                     usu_id = ?";
             $sql=$conectar->prepare($sql);
             $sql->bindValue(1, $usu_pass);
+            $sql->bindValue(2, $usu_id);
+            $sql->execute();
+            return $resultado=$sql->fetchAll();
+        }
+
+        /* TODO: Registro x Correo */
+        public function get_usuario_x_correo($usu_correo){
+            $conectar= parent::conexion();
+            parent::set_names();
+            $sql="SELECT * FROM tm_usuario WHERE usu_correo=?";
+            $sql=$conectar->prepare($sql);
+            $sql->bindValue(1, $usu_correo);
+            $sql->execute();
+            return $resultado=$sql->fetchAll();
+        }
+
+        public function get_cambiar_contra_recuperar($usu_correo){
+            $conectar= parent::conexion();
+            parent::set_names();
+            $sql="UPDATE
+                tm_usuario
+                    SET
+                usu_pass=CONCAT(SUBSTRING(MD5(RAND()),1,3),LPAD(FLOOR(RAND()*1000),3,'0'))
+                    WHERE
+                usu_correo=?";
+            $sql=$conectar->prepare($sql);
+            $sql->bindValue(1, $usu_correo);
+            $sql->execute();
+            return $resultado=$sql->fetchAll();
+        }
+
+        public function encriptar_nueva_contra($usu_id,$usu_pass){
+
+            $key="mi_key_secret";
+            $cipher="aes-256-cbc";
+            $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($cipher));
+            $cifrado = openssl_encrypt($usu_pass, $cipher, $key, OPENSSL_RAW_DATA, $iv);
+            $textoCifrado = base64_encode($iv . $cifrado);
+
+            $conectar= parent::conexion();
+            parent::set_names();
+            $sql="UPDATE tm_usuario set
+                usu_pass = ?
+                WHERE
+                usu_id = ?";
+            $sql=$conectar->prepare($sql);
+            $sql->bindValue(1, $textoCifrado);
             $sql->bindValue(2, $usu_id);
             $sql->execute();
             return $resultado=$sql->fetchAll();

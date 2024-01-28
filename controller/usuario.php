@@ -140,5 +140,15 @@
 
             $usuario->update_usuario_pass($_POST["usu_id"],$textoCifrado);
             break;
+
+        case "correo":
+            $datos=$usuario->get_usuario_x_correo($_POST["usu_correo"]);
+            if(is_array($datos)==true and count($datos)>0){
+
+                echo "Existe";
+            }else{
+                echo "Error";
+            }
+            break;
     }
 ?>
