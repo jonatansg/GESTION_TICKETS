@@ -60,8 +60,12 @@
 
         /* TODO: Actualizamos el ticket a cerrado y añadimos una línea adicional */
         case "update":
-            $ticket->update_ticket($_POST["tick_id"]);
-            $ticket->insert_ticketdetalle_cerrar($_POST["tick_id"],$_POST["usu_id"]);
+            $iv_dec = substr(base64_decode($_POST["tick_id"]), 0, openssl_cipher_iv_length($cipher));
+            $cifradoSinIV = substr(base64_decode($_POST["tick_id"]), openssl_cipher_iv_length($cipher));
+            $descifrado = openssl_decrypt($cifradoSinIV, $cipher, $key, OPENSSL_RAW_DATA, $iv_dec);
+
+            $ticket->update_ticket($descifrado);
+            $ticket->insert_ticketdetalle_cerrar($descifrado,$_POST["usu_id"]);
         break;
 
         /* TODO: Reabrimos el ticket a cerrado y añadimos una línea adicional */

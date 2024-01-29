@@ -5,8 +5,8 @@ function init(){
 $(document).ready(function(){
     var tick_id = getUrlParameter('ID');
     listardetalle(tick_id);
-    console.log(tick_id);
 
+    /* TODO: Inicializamos input de estrellas */
     $('#tick_estre').on('rating.change', function() {
         console.log($('#tick_estre').val());
     });
@@ -14,7 +14,8 @@ $(document).ready(function(){
 });
 
 function listardetalle(tick_id){
-    $.post("../../controller/ticket.php?op=mostrar", { tick_id : tick_id }, function (data) {
+    /* TODO: Muestra el detalle del ticket */
+    $.post("../../controller/ticket.php?op=mostrar_noencry", { tick_id : tick_id }, function (data) {
         data = JSON.parse(data);
         $('#lblestado').val(data.tick_estado_texto);
         $('#lblnomusuario').val(data.usu_nom +' '+data.usu_ape);
@@ -38,6 +39,7 @@ function listardetalle(tick_id){
     });
 }
 
+/* TODO: Obtener ID de la Url */
 var getUrlParameter = function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
         sURLVariables = sPageURL.split('&'),
@@ -53,6 +55,7 @@ var getUrlParameter = function getUrlParameter(sParam) {
     }
 };
 
+/* TODO: Guarda la información de estrella del ticket */
 $(document).on("click","#btnguardar", function(){
     var tick_id = getUrlParameter('ID');
     var tick_estre = $('#tick_estre').val(); 

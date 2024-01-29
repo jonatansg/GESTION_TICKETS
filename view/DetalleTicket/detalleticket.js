@@ -185,7 +185,13 @@ $(document).on("click","#btncerrarticket", function(){
     },
     function(isConfirm) {
         if (isConfirm) {
-            var tick_id = getUrlParameter('ID');
+
+            const url=window.location.href;
+            const params = new URLSearchParams(new URL(url).search);
+            const tick_id = params.get("ID");
+            const decoded_id  = decodeURIComponent(tick_id);
+            const id = decoded_id.replace(/\s/g, '+');
+
             var usu_id = $('#user_idx').val();
             /* TODO: Actualizamos el ticket  */
             $.post("../../controller/ticket.php?op=update", { tick_id : tick_id,usu_id : usu_id }, function (data) {
@@ -196,9 +202,6 @@ $(document).on("click","#btncerrarticket", function(){
             $.post("../../controller/email.php?op=ticket_cerrado", {tick_id : tick_id}, function (data) {
 
             });
-
-            /* TODO: Llamamos a función listardetalle */
-            listardetalle(tick_id);
 
             /* TODO: Alerta de confirmación */
             swal({

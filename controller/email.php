@@ -4,6 +4,10 @@
     require_once("../models/Email.php");
     $email = new Email();
 
+    $key="mi_key_secret";
+    $cipher="aes-256-cbc";
+    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($cipher));
+
     /* Opciones del controlador */
     switch ($_GET["op"]) {
         /*  Enviar ticket abierto con el ID */
@@ -11,10 +15,15 @@
             $email->ticket_abierto($_POST["tick_id"]);
             break;
 
+        /*  Enviar ticket cerrado según el ID */
         case "ticket_cerrado":
-            $email->ticket_cerrado($_POST["tick_id"]);
+            $iv_dec = substr(base64_decode($_POST["tick_id"]), 0, openssl_cipher_iv_length($cipher));
+            $cifradoSinIV = substr(base64_decode($_POST["tick_id"]), openssl_cipher_iv_length($cipher));
+            $descifrado = openssl_decrypt($cifradoSinIV, $cipher, $key, OPENSSL_RAW_DATA, $iv_dec);
+            $email->ticket_cerrado($descifrado);
             break;
 
+        /*  Enviar ticket asignado según el ID */
         case "ticket_asignado":
             $email->ticket_asignado($_POST["tick_id"]);
             break;
