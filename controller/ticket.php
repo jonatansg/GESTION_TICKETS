@@ -489,9 +489,19 @@
             echo json_encode($datos);
         break;
 
+        /* TODO: Insertar valor de encuesta, estrellas y comentarios */
         case "encuesta":
             $ticket->insert_encuesta($_POST["tick_id"],$_POST["tick_estre"],$_POST["tick_coment"]);
         break;
 
+        case "all_calendar":
+            $datos=$ticket->get_calendar_all();
+            echo json_encode($datos);
+            break;
+
+        case "usu_calendar":
+            $datos=$ticket->get_calendar_usu($_POST["usu_id"]);
+            echo json_encode($datos);
+            break;
     }
 ?>
