@@ -42,6 +42,11 @@ $(document).ready(function(){
     $('#tickd_descrip').summernote({
         height: 400,
         lang: "es-ES",
+        popover: {
+            image: [],
+            link: [],
+            air: []
+        },
         callbacks: {
             onImageUpload: function(image) {
                 console.log("Image detect...");

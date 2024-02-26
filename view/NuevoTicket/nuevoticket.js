@@ -8,6 +8,11 @@ $(document).ready(function() {
     $('#tick_descrip').summernote({
         height: 150,
         lang: "es-ES",
+        popover: {
+            image: [],
+            link: [],
+            air: []
+        },
         callbacks: {
             onImageUpload: function(image) {
                 console.log("Image detect...");
